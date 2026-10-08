@@ -1,0 +1,15 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "niduslabs-website",
+  // The Nidus Labs Cloudflare account, which also holds the niduslabs.dev zone.
+  "account_id": "16a3f923e905d6a0e1f7b289d1311519",
+  "compatibility_date": "2026-10-08",
+  "assets": {
+    "directory": "./public",
+    "html_handling": "drop-trailing-slash",
+    "not_found_handling": "404-page"
+  },
+  "routes": [{ "pattern": "niduslabs.dev", "custom_domain": true }],
+  "workers_dev": false,
+  "observability": { "enabled": true }
+}
