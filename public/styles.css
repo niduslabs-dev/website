@@ -91,6 +91,8 @@ nav.site a:hover { color: var(--moss); }
 }
 .app img { width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0; }
 .app h2 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
+.app-name { color: var(--text); text-decoration: none; }
+.app-name:hover { color: var(--moss); }
 .app p { margin: 4px 0 10px; color: var(--muted); }
 .app .links { display: flex; flex-wrap: wrap; gap: 16px; font-size: 15px; font-weight: 600; }
 .badge {
