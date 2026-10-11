@@ -23,7 +23,7 @@ jobs:
     name: Deploy the site
     if: >-
       github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push')
+      (github.event.workflow_run.conclusion == 'success' && contains(fromJSON('["push","workflow_dispatch"]'), github.event.workflow_run.event))
     runs-on: >-
       ${{ fromJSON(startsWith(vars.LINUX_RUNNER, '[') && vars.LINUX_RUNNER
       || format('"{0}"', vars.LINUX_RUNNER || 'ubuntu-latest')) }}
