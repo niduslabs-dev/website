@@ -3,9 +3,10 @@
   "private": true,
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "check": "wrangler deploy --dry-run"
   },
   "devDependencies": {
     "wrangler": "^4.139.0"
-  }
+  },
+  "packageManager": "pnpm@11.17.0"
 }
