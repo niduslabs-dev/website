@@ -1,5 +1,7 @@
 # niduslabs.dev
 
+> Part of the Nidus Labs workspace (`~/Work/personal/niduslabs`). Start with the workspace guide `../AGENTS.md` and `../STATUS.md`.
+
 The Nidus Labs website: the studio home page, and each app's privacy policy and terms (`/splito/privacy`, `/splito/terms`).
 
 Plain HTML and CSS in `public/`, served by a Cloudflare Worker with static assets in the Nidus Labs account.
