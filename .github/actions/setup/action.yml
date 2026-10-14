@@ -1,0 +1,93 @@
+# One setup for every job: Node, pnpm at the version in package.json's
+# `packageManager` (Corepack, which comes with Node, instead of downloading it
+# with pnpm/action-setup), and the dependencies installed.
+#
+# The installed `node_modules` itself is cached (pnpm's default isolated
+# layout keeps every package inside it, under `.pnpm`), with Corepack's copy
+# of pnpm and pnpm's verdict on the lockfile (it checks that even when nothing
+# needs installing). For an unchanged lockfile that is one download and
+# `pnpm install` finds nothing to do. When the lockfile changed, pnpm's store
+# is restored instead, and the new tree is saved straight after the install,
+# before the job can change it.
+name: Set up Node and pnpm
+description: Node, pnpm through Corepack, and the dependencies installed, with the installed tree cached.
+inputs:
+  node-version:
+    description: The Node version.
+    default: "24"
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v7
+      id: node
+      with:
+        node-version: ${{ inputs.node-version }}
+        package-manager-cache: false
+    # What the installed tree depends on besides the lockfile. Bump `v1` when
+    # the cached layout changes.
+    - name: Name the caches
+      id: keys
+      shell: bash
+      env:
+        LOCKFILE_HASH: ${{ hashFiles('pnpm-lock.yaml', 'pnpm-workspace.yaml', '.npmrc', 'patches/**') }}
+        NODE_VERSION: ${{ steps.node.outputs.node-version }}
+      run: |
+        pnpm_version=$(node -p "require('./package.json').packageManager.split('@')[1]")
+        echo "modules=node-modules-v1-$RUNNER_OS-$RUNNER_ARCH-node$NODE_VERSION-pnpm$pnpm_version-$LOCKFILE_HASH" >> "$GITHUB_OUTPUT"
+    - name: Restore the installed dependencies
+      id: modules
+      uses: actions/cache/restore@v6
+      with:
+        path: |
+          node_modules
+          ~/.cache/node/corepack
+          ~/.cache/pnpm/lockfile-verified.jsonl
+        key: ${{ steps.keys.outputs.modules }}
+    - name: Enable pnpm
+      id: pnpm
+      shell: bash
+      env:
+        COREPACK_ENABLE_DOWNLOAD_PROMPT: "0"
+      run: |
+        corepack enable
+        echo "store=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+    # Only when the tree wasn't cached: pnpm's store, and its verdict on the
+    # lockfile (`~/.cache/pnpm`, pnpm's cache directory on Linux).
+    - name: Restore pnpm's store
+      if: ${{ steps.modules.outputs.cache-hit != 'true' }}
+      id: store
+      uses: actions/cache/restore@v6
+      with:
+        path: |
+          ${{ steps.pnpm.outputs.store }}
+          ~/.cache/pnpm/lockfile-verified.jsonl
+        key: pnpm-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+        restore-keys: pnpm-v1-${{ runner.os }}-
+    # On a hit, pnpm's quick check that the tree matches the lockfile, which
+    # it skips on CI: the cache key already guarantees it.
+    - name: Install
+      shell: bash
+      env:
+        QUICK_CHECK: ${{ steps.modules.outputs.cache-hit == 'true' && '--config.optimistic-repeat-install=true' || '' }}
+      run: pnpm install --frozen-lockfile $QUICK_CHECK
+    # When two jobs save the same key at once, one wins and the other only
+    # warns.
+    - name: Save the installed dependencies
+      if: ${{ steps.modules.outputs.cache-hit != 'true' }}
+      continue-on-error: true
+      uses: actions/cache/save@v6
+      with:
+        path: |
+          node_modules
+          ~/.cache/node/corepack
+          ~/.cache/pnpm/lockfile-verified.jsonl
+        key: ${{ steps.keys.outputs.modules }}
+    - name: Save pnpm's store
+      if: ${{ steps.modules.outputs.cache-hit != 'true' && steps.store.outputs.cache-hit != 'true' }}
+      continue-on-error: true
+      uses: actions/cache/save@v6
+      with:
+        path: |
+          ${{ steps.pnpm.outputs.store }}
+          ~/.cache/pnpm/lockfile-verified.jsonl
+        key: pnpm-v1-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
