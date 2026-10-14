@@ -1,3 +1,8 @@
 node_modules/
 .wrangler/
 .DS_Store
+# Built from content/splito by scripts/build-legal.mjs.
+/public/splito/privacy/
+/public/splito/terms/
+/public/splito/privacy.md
+/public/splito/terms.md

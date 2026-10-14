@@ -1,25 +1,31 @@
 # Checks the site on each push to main and on pull requests: installs, then
 # runs wrangler's dry-run deploy, which reads wrangler.jsonc and every file in
-# public/ without uploading. Commits that only touch docs (Markdown, docs/)
-# skip it. On main, the same job then ships niduslabs.dev: deploys the Worker
+# public/ without uploading, after building the legal pages from
+# content/splito. Commits that only touch docs (Markdown outside content/,
+# docs/) skip it. On main, the same job then ships niduslabs.dev: deploys the Worker
 # and its static assets, and checks that the live Splito privacy policy has
 # the latest wording. This is the only way production changes. Run by hand on
 # main, it checks and deploys main as it is.
 name: CI
 run-name: ${{ github.event_name == 'workflow_dispatch' && format('CI · {0} (by hand)', github.ref_name) || '' }}
 
+# Docs are skipped, but the legal pages' Markdown in content/ is the site.
 on:
   push:
     branches: [main]
-    paths-ignore:
-      - "**/*.md"
-      - "docs/**"
+    paths:
+      - "**"
+      - "!**/*.md"
+      - "!docs/**"
+      - "content/**"
   # Never `pull_request_target`: the repo is public, so pull requests from
   # forks must not run with its secrets.
   pull_request:
-    paths-ignore:
-      - "**/*.md"
-      - "docs/**"
+    paths:
+      - "**"
+      - "!**/*.md"
+      - "!docs/**"
+      - "content/**"
   workflow_dispatch:
 
 permissions:
@@ -96,3 +102,19 @@ jobs:
           done
           echo "::error::$url doesn't show the latest policy wording."
           exit 1
+
+      # The app reads the same wording as Markdown.
+      - name: Check the live privacy policy's Markdown
+        if: env.DEPLOY == 'true'
+        env:
+          SHA: ${{ github.sha }}
+        run: |
+          url=https://niduslabs.dev/splito/privacy.md
+          expected='every lookup in our support tools is logged'
+          body=$(curl --silent --fail --max-time 10 \
+            --doh-url https://cloudflare-dns.com/dns-query "$url?v=${SHA:0:12}")
+          if ! grep -qF "$expected" <<< "$body"; then
+            echo "::error::$url doesn't show the latest policy wording."
+            exit 1
+          fi
+          echo "OK: $url has \"$expected\"."

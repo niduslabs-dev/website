@@ -2,8 +2,8 @@
 
 > Part of the Nidus Labs workspace (`~/Work/personal/niduslabs`). Start with the workspace guide `../AGENTS.md` and `../STATUS.md`; this file covers this repo only.
 
-`niduslabs.dev`: the studio home page and each app's privacy policy and terms (`/splito/privacy`, `/splito/terms`, account deletion). It's plain HTML and CSS in `public/`, served by a Cloudflare Worker with static assets. Setup and commands are in `README.md`.
+`niduslabs.dev`: the studio home page and each app's privacy policy and terms (`/splito/privacy`, `/splito/terms`, account deletion). It's plain HTML and CSS in `public/`, served by a Cloudflare Worker with static assets, except Splito's privacy policy and terms: their wording lives in `content/splito/*.md`, and `scripts/build-legal.mjs` builds the pages and publishes the Markdown (`/splito/privacy.md`, `/splito/terms.md`) that the Splito app shows natively. Edit the Markdown, never the built HTML (it's gitignored). Setup and commands are in `README.md`.
 
-- **Deploys go through CI only:** `ci.yml` runs wrangler's dry-run deploy and, on main, then deploys in the same job and checks that the live privacy page carries its expected sentence; update that check when you change the policy wording. There's no deploy script to run by hand.
+- **Deploys go through CI only:** `ci.yml` runs wrangler's dry-run deploy and, on main, then deploys in the same job and checks that the live privacy page and its Markdown carry the expected sentence; update both checks when you change the policy wording. There's no deploy script to run by hand.
 - **Legal pages describe what the apps and dashboard actually do.** Change them with the product, never ahead of it, and don't overclaim.
 - **Keep the existing tone and structure,** and update a page's "Last updated" date when its content changes.

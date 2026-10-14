@@ -2,10 +2,12 @@
   "name": "niduslabs-website",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
-    "check": "wrangler deploy --dry-run"
+    "build": "node scripts/build-legal.mjs",
+    "dev": "pnpm build && wrangler dev",
+    "check": "pnpm build && wrangler deploy --dry-run"
   },
   "devDependencies": {
+    "marked": "18.0.14",
     "wrangler": "^4.139.0"
   },
   "packageManager": "pnpm@11.17.0"
