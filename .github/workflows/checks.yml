@@ -36,9 +36,16 @@ env:
 jobs:
   checks:
     name: Build and deploy
-    # GitHub's own runners: free for a public repo. Never the self-hosted Mac
-    # or the org's `vars.LINUX_RUNNER`: pull requests from forks run here.
-    runs-on: ubuntu-latest
+    # Runs that deploy use `vars.LINUX_RUNNER` (a label or a JSON array), else
+    # GitHub's Ubuntu: the zone's Bot Fight Mode challenges GitHub's own
+    # runners, so the live check after the deploy can't pass from them.
+    # Everything else, pull requests from forks included, runs on GitHub's
+    # own runners, free for a public repo, and never the self-hosted Mac.
+    runs-on: >-
+      ${{ fromJSON(github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      && startsWith(vars.LINUX_RUNNER, '[') && vars.LINUX_RUNNER
+      || format('"{0}"', github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+      && vars.LINUX_RUNNER || 'ubuntu-latest')) }}
     timeout-minutes: 5
     # Only runs that deploy are production deployments.
     environment:
