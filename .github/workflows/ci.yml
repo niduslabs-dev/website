@@ -5,7 +5,8 @@
 # and its static assets, and checks that the live Splito privacy policy has
 # the latest wording. This is the only way production changes. Run by hand on
 # main, it checks and deploys main as it is.
-name: Checks
+name: CI
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('CI · {0} (by hand)', github.ref_name) || '' }}
 
 on:
   push:
@@ -35,7 +36,7 @@ env:
 
 jobs:
   checks:
-    name: Build and deploy
+    name: ${{ github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && 'Check and deploy' || 'Check' }}
     # Runs that deploy use `vars.LINUX_RUNNER` (a label or a JSON array), else
     # GitHub's Ubuntu: the zone's Bot Fight Mode challenges GitHub's own
     # runners, so the live check after the deploy can't pass from them.
