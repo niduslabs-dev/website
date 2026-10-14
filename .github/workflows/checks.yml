@@ -76,14 +76,14 @@ jobs:
           for _ in $(seq 1 12); do
             # DNS over HTTPS through Cloudflare, as in the dashboard's deploy:
             # a runner's resolver may hold a stale answer for the domain.
-            page=$(curl --silent --fail --max-time 10 \
+            status=$(curl --silent --output "$RUNNER_TEMP/page.html" --max-time 10 \
               --doh-url https://cloudflare-dns.com/dns-query \
-              "$url?v=${SHA:0:12}" || true)
-            if grep -qF "$expected" <<<"$page"; then
+              --write-out '%{http_code}' "$url?v=${SHA:0:12}" || true)
+            if [ "$status" = 200 ] && grep -qF "$expected" "$RUNNER_TEMP/page.html"; then
               echo "OK: $url has \"$expected\"."
               exit 0
             fi
-            echo "Waiting: $url doesn't have \"$expected\" yet."
+            echo "Waiting: $url answered $status without \"$expected\"."
             sleep 10
           done
           echo "::error::$url doesn't show the latest policy wording."
