@@ -1,6 +1,6 @@
 # Splito privacy policy
 
-Last updated 12 October 2026
+Last updated 28 October 2026
 
 Splito helps you keep track of shared expenses with friends and groups. It's made by Nidus Labs, the studio of Jatin, an independent developer in India. This policy explains what Splito collects, why, who it's shared with, and what you can do about it. Questions go to [support@niduslabs.dev](mailto:support@niduslabs.dev).
 
@@ -24,6 +24,10 @@ The short version: Splito collects only what it needs to split expenses with the
 ## Your contacts
 
 When you add a friend, Splito can show your phone's contacts so you can pick someone. Your contacts are read on your phone and are never uploaded. Only the number and name of the person you choose to add are sent to Splito.
+
+## Invite links
+
+When you tap a button on an invite page to get the app, the page copies the invite link to your clipboard. If you then install Splito, the app reads that invite once: on Android from Google Play's install referrer, on iPhone from your clipboard only when you tap Paste. It's used only to open that invite.
 
 ## Information about people who haven't joined
 
