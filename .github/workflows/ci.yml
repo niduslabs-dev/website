@@ -86,7 +86,7 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           url=https://niduslabs.dev/splito/privacy
-          expected='every lookup in our support tools is logged'
+          expected='No image of a bill is stored or sent anywhere'
           for _ in $(seq 1 12); do
             # DNS over HTTPS through Cloudflare, as in the dashboard's deploy:
             # a runner's resolver may hold a stale answer for the domain.
@@ -110,7 +110,7 @@ jobs:
           SHA: ${{ github.sha }}
         run: |
           url=https://niduslabs.dev/splito/privacy.md
-          expected='every lookup in our support tools is logged'
+          expected='No image of a bill is stored or sent anywhere'
           body=$(curl --silent --fail --max-time 10 \
             --doh-url https://cloudflare-dns.com/dns-query "$url?v=${SHA:0:12}")
           if ! grep -qF "$expected" <<< "$body"; then

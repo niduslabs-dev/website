@@ -15,7 +15,7 @@ The short version: Splito collects only what it needs to split expenses with the
 | **Passkeys**: the public half of each passkey you add, its name and when it was last used | To sign you in with Face ID, Touch ID or your device's lock. The private key never leaves your device. |
 | **Your phone number** | So friends who have your number can add you, and so expenses they added before you joined find you. It isn't verified and is never used for marketing. |
 | **What you record**: groups, expenses, amounts, notes, categories, payments, and the edit history of each | This is the app. It's shared with the people in each expense, payment or group. |
-| **Bill lines**: the lines of a bill you scan, pick or paste (names and amounts), once you save them | To split a bill by what each person had. They're shared with the people on the bill, like the rest of an expense. |
+| **Bill items**: the items and charges of a bill you scan, pick or paste (names and amounts), once you save them | To split a bill by what each person had. They're shared with the people on the bill, like the rest of an expense. |
 | **Your UPI ID**, if you add one | So friends who owe you can pay you from their UPI app. |
 | **Sessions**: your device's name and platform, and when it was last used | So you can see where you're signed in and sign out a device. |
 | **A push token** for each device, if you allow notifications | To tell you when someone adds an expense or a payment. |
@@ -28,7 +28,7 @@ When you add a friend, Splito can show your phone's contacts so you can pick som
 
 ## Scanning a bill
 
-Splito reads a bill you scan, or a screenshot you pick or share to it, on your phone. The photo never leaves your phone and isn't kept anywhere, by Splito or anyone else. Only the text read from it is sent to Splito's server, which uses Cloudflare's AI service to find the lines and sends them back. That text isn't stored or logged, and nothing is saved until you check the lines and tap Save. Splito keeps only the time of each read, to limit how many a day one person can do.
+Splito reads a bill you scan, or a screenshot you pick or share to it, on your phone. The photo never leaves your phone and isn't kept anywhere, by Splito or anyone else. Only the text read from it is sent to Splito's server, which uses Cloudflare's AI service (Workers AI) to find the items and sends them back. That text is processed and not retained: it isn't stored or logged, and nothing is saved until you check the items and tap Save. No image of a bill is stored or sent anywhere. Splito keeps only the time of each read, to limit how many a day one person can do.
 
 ## Invite links
 
@@ -48,8 +48,8 @@ You can add a friend by name and phone number before they use Splito. That numbe
 
 Splito uses these companies to run. Each handles data only to provide its service:
 
-- **Cloudflare**: runs Splito's server and keeps its short-lived logs, and reads the text of a bill you scan or paste to find its lines (Workers AI). It doesn't keep that text or train on it.
-- **Google ML Kit** (Android): reads bills on your phone. The photo stays on your phone; ML Kit sends Google anonymous usage statistics. On iPhone, Apple's own on-device text recognition is used.
+- **Cloudflare**: runs Splito's server and keeps its short-lived logs, and reads the text of a bill you scan or paste to find its items (Workers AI). It doesn't keep that text or train on it.
+- **Google ML Kit** (Android): reads bills on your phone. The photo stays on your phone; ML Kit sends Google anonymous usage statistics. On iPhone, Apple's on-device text recognition (Vision) is used.
 - **Neon**: hosts Splito's database, in Singapore.
 - **Google and Apple**: sign-in, and delivering notifications to your device.
 - **Expo**: passes notifications on to Google and Apple.
