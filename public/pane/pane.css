@@ -1,0 +1,50 @@
+/* The Pane page. Colours and type come from /styles.css. */
+
+.product-hero { padding: 56px 0 40px; }
+.product-title { display: flex; align-items: center; gap: 18px; }
+.product-title img { width: 72px; height: 72px; flex-shrink: 0; }
+.product-title h1 {
+  margin: 0;
+  font-size: clamp(40px, 8vw, 56px);
+  line-height: 1.05;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+}
+.byline { margin: 2px 0 0; color: var(--muted); font-weight: 600; font-size: 15px; }
+.byline a { color: inherit; }
+.tagline { margin: 28px 0 0; font-size: 22px; line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; max-width: 560px; }
+.product-hero .sub { margin: 12px 0 0; color: var(--muted); max-width: 560px; }
+
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 28px; }
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 700;
+  font-size: 15px;
+}
+.actions a { font-weight: 600; font-size: 15px; }
+.fineprint { margin: 14px 0 0; color: var(--muted); font-size: 15px; }
+
+.shot { margin: 0; padding: 40px 20px; display: flex; justify-content: center; background: var(--surface); border: 1px solid var(--rule); border-radius: 20px; }
+.shot img { display: block; width: 100%; max-width: 340px; height: auto; }
+
+.product { padding: 16px 0 72px; }
+.product h2 { font-size: 22px; letter-spacing: -0.01em; margin: 48px 0 8px; }
+.product p { margin: 8px 0; }
+.product ul { margin: 8px 0; padding-left: 22px; }
+.product li { margin: 6px 0; }
+.product code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 1px 5px;
+  overflow-wrap: anywhere;
+}
