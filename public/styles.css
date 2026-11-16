@@ -90,6 +90,8 @@ nav.site a:hover { color: var(--moss); }
   padding: 22px;
 }
 .app img { width: 56px; height: 56px; border-radius: 14px; flex-shrink: 0; }
+/* A Mac icon carries Apple's transparent margin: draw it larger and pull it back into the same box, so its tile matches the others. */
+.app img.mac-icon { --icon-box: 72px; width: var(--icon-box); height: var(--icon-box); border-radius: 0; margin: calc((56px - var(--icon-box)) / 2); }
 .app h2 { margin: 0; font-size: 20px; letter-spacing: -0.01em; }
 .app-name { color: var(--text); text-decoration: none; }
 .app-name:hover { color: var(--moss); }
