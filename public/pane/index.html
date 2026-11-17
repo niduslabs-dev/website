@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap">
 <link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/product.css">
 <link rel="stylesheet" href="/pane/pane.css">
 </head>
 <body>
@@ -31,7 +32,7 @@
 <img src="/pane/icon.png" width="84" height="84" alt="">
 <div>
 <h1>Pane</h1>
-<p class="byline">by <a href="/">Nidus Labs</a></p>
+<p class="kind">Android Emulator Mirror for Mac</p>
 </div>
 </div>
 <p class="tagline">The Android emulator in a clean Mac window.</p>
@@ -50,46 +51,52 @@
 </picture>
 </figure>
 
-<section class="product">
-<h2>What it does</h2>
-<ul>
-<li>Shows the emulator in one window, inside a frame drawn to fit its screen. Clicks, scrolls and keys go to the emulator.</li>
-<li>The power and volume buttons on the frame work. Click them.</li>
-<li>Inspect layout shows a view's frame, size and id in dp. Measure draws a line between two points and snaps to view edges. Pick colour copies a pixel's hex value.</li>
-<li>Drop an app on the screen to install it. Pane says whether it's new, an update or older before you let go. Other files go to the device's Download folder.</li>
-<li>Text you copy on the device reaches the Mac while Pane is in front. Command-V in Pane pastes the Mac's text on the device.</li>
-<li>Saves or copies screenshots, with the device frame if you want it. Recordings show a timer while they run and can be exported as a GIF.</li>
-<li>Window sizes like the iOS Simulator: Physical Size, Point Accurate, Pixel Accurate and Fit Screen.</li>
-<li>Click the device name to switch emulators, or open another one in a new window. Each emulator gets one window.</li>
-<li>Starts an emulator without its own window, or attaches to one that is already running.</li>
-</ul>
+<section class="features" aria-label="Features">
+<div>
+<h2>A real device frame</h2>
+<p>The emulator sits in a frame drawn to fit its screen. Clicks, scrolls and keys go straight to it, and the power and volume buttons work.</p>
+</div>
+<div>
+<h2>Tools for checking layouts</h2>
+<p>Inspect layout shows a view's frame, size and id in dp. Measure snaps to view edges. Pick colour copies a pixel's hex value.</p>
+</div>
+<div>
+<h2>Drop to install</h2>
+<p>Drop an app on the screen and Pane says whether it's new, an update or older before you let go. Other files go to the Download folder.</p>
+</div>
+<div>
+<h2>Screenshots and recordings</h2>
+<p>Save or copy screenshots, with the frame if you want it. Recordings show a timer and can be exported as a GIF.</p>
+</div>
+<div>
+<h2>Sizes you know</h2>
+<p>Physical Size, Point Accurate, Pixel Accurate and Fit Screen, like the iOS Simulator. Each emulator gets its own window.</p>
+</div>
+<div>
+<h2>Shared clipboard</h2>
+<p>Text you copy on the device reaches the Mac while Pane is in front. Command-V pastes the Mac's text on the device.</p>
+</div>
+</section>
 
+<section class="note">
 <h2>What it needs</h2>
-<ul>
-<li>macOS 15 or later.</li>
-<li>The Android SDK with its emulator installed, and at least one virtual device.</li>
-<li>Emulator 37.3.9 or later is recommended. The current stable build, 37.2.13, can crash while anything streams its screen. Install the beta with <code>sdkmanager --channel=1 emulator</code>.</li>
-</ul>
-<p>Pane works with the Android emulator only. It does not show physical phones or the iOS Simulator.</p>
+<p>macOS 15 or later, and the Android SDK with its emulator and at least one virtual device. Pane starts an emulator without its own window, or attaches to one already running. It works with the Android emulator only, not physical phones or the iOS Simulator.</p>
+<p>Emulator 37.3.9 or later is recommended. The current stable build, 37.2.13, can crash while anything streams its screen. Install the beta with <code>sdkmanager --channel=1 emulator</code>.</p>
+</section>
 
+<section class="note">
 <h2>Show all emulators in Pane</h2>
-<p>This setting is in Pane's Settings. It is optional and off by default. When it is on, an emulator started anywhere, such as from Expo or a terminal, opens in Pane without its own window.</p>
-<p>It changes your shell setup, so here is what it does:</p>
+<p>An optional setting, off by default. When it's on, an emulator started anywhere, such as from Expo or a terminal, opens in Pane without its own window. It changes your shell setup:</p>
 <ul>
-<li>It creates a wrapper SDK folder at <code>~/Library/Android/pane-sdk</code>. The folder links to your real SDK. Only the emulator launcher is replaced.</li>
-<li>It adds a small marked block to your fish and zsh config files. The block points <code>ANDROID_HOME</code> at the wrapper folder. Pane backs up each file first.</li>
+<li>It creates a wrapper SDK folder at <code>~/Library/Android/pane-sdk</code> that links to your real SDK. Only the emulator launcher is replaced.</li>
+<li>It adds a small marked block to your fish and zsh config files, pointing <code>ANDROID_HOME</code> at the wrapper. Pane backs up each file first.</li>
 </ul>
-<p>Turn the setting off and Pane removes the block and the folder. If Pane is missing, the wrapper runs the real emulator unchanged.</p>
-<p>While the setting is on, install SDK packages from Android Studio. Running <code>sdkmanager</code> from your shell would write into the wrapper folder.</p>
+<p>Turn it off and Pane removes the block and the folder. If Pane is missing, the wrapper runs the real emulator unchanged. While it's on, install SDK packages from Android Studio, since <code>sdkmanager</code> from your shell would write into the wrapper folder.</p>
+</section>
 
-<h2>Good to know</h2>
-<ul>
-<li>No account and no analytics. Pane only goes online to check for its own updates.</li>
-<li>Pane is not sandboxed. It has to read the emulator's files to find and connect to it.</li>
-<li>Releases are signed with a Developer ID and notarized by Apple.</li>
-<li>Pane updates itself.</li>
-<li>The code is on <a href="https://github.com/niduslabs-dev/pane">GitHub</a> under GPL-3.0.</li>
-</ul>
+<section class="private">
+<h2>Private by design</h2>
+<p>No account and no analytics. Pane only goes online to check for its own updates. It isn't sandboxed, because it reads the emulator's files to find it. Releases are signed with a Developer ID and notarized by Apple, and the code is on <a href="https://github.com/niduslabs-dev/pane">GitHub</a> under GPL-3.0.</p>
 </section>
 </main>
 
