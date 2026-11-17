@@ -2,7 +2,7 @@
 
 .product-hero { padding: 56px 0 40px; }
 .product-title { display: flex; align-items: center; gap: 18px; }
-.product-title img { width: 72px; height: 72px; flex-shrink: 0; }
+.product-title img { width: 84px; height: 84px; flex-shrink: 0; margin-left: -8px; }
 .product-title h1 {
   margin: 0;
   font-size: clamp(40px, 8vw, 56px);
