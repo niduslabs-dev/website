@@ -6,3 +6,6 @@ node_modules/
 /public/splito/terms/
 /public/splito/privacy.md
 /public/splito/terms.md
+
+# Agents' local screenshots, mocks and checks
+.claude/
