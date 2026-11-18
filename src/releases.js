@@ -13,16 +13,10 @@
  * that a short page that links to the GitHub releases. Never an error.
  */
 
-/** The apps with a releases page, by URL slug. `nav` is the second header link, as on the app's own page. */
+/** The apps with a releases page, by URL slug: the name and the icon the app bar shows, as on the app's own page. */
 export const APPS = {
-  drop: {
-    name: "Drop",
-    nav: { href: "mailto:hello@niduslabs.dev", label: "Contact" },
-  },
-  pane: {
-    name: "Pane",
-    nav: { href: "https://github.com/niduslabs-dev/pane", label: "GitHub" },
-  },
+  drop: { name: "Drop", icon: "/drop/icon.png" },
+  pane: { name: "Pane", icon: "/pane/icon.png" },
 };
 
 const ORIGIN = "https://niduslabs.dev";
@@ -133,33 +127,51 @@ function head(slug, { title, description, canonical }) {
 <link rel="stylesheet" href="/releases.css">
 </head>
 <body>
-<div class="page">
-<header class="site">
-<a class="brand" href="/"><img class="mark-light" src="/mark.svg" alt=""><img class="mark-dark" src="/mark-on-dark.svg" alt="">Nidus <span>Labs</span></a>
-<nav class="site" aria-label="Main"><a href="/#apps">Apps</a><a href="${APPS[slug].nav.href}">${APPS[slug].nav.label}</a></nav>
-</header>
-
-<main>
 `;
 }
 
+const MENU_CHEVRON = `<svg class="menu-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+/**
+ * The top of a releases page: the skip link, the global header, then the app's sticky bar with Release notes
+ * marked current (its Overview is the way back), as public/drop/index.html has it. On phones the bar's links and
+ * Download fold into a popover menu; no script.
+ */
+function heroStart(slug) {
+  const { name, icon } = APPS[slug];
+  const dmg = `${GITHUB}/${slug}/releases/latest/download/${name}.dmg`;
+  const links = `<a href="/${slug}">Overview</a><a href="/${slug}/releases" aria-current="page">Release notes</a>`;
+  return `<a class="skip" href="#content">Skip to content</a>
+<div class="page">
+<header class="site">
+<a class="brand" href="/"><img class="mark-light" src="/mark.svg" alt=""><img class="mark-dark" src="/mark-on-dark.svg" alt="">Nidus <span>Labs</span></a>
+<nav class="site" aria-label="Main"><a href="/#apps">Apps</a><a href="mailto:hello@niduslabs.dev">Contact</a></nav>
+</header>
+</div>
+<nav class="appbar" aria-label="${name}"><div class="appbar-inner">
+<span class="app-title"><img class="app-icon mac-icon" src="${icon}" width="28" height="28" alt="">${name}</span>
+<span class="app-links">${links}</span>
+<div class="app-menu"><button type="button" class="app-menu-btn" popovertarget="app-pages"><span class="vh">${name} pages, </span>Release notes${MENU_CHEVRON}</button><div class="app-menu-panel" id="app-pages" popover>${links}<hr><a class="menu-download" href="${dmg}">Download for Mac</a></div></div>
+<a class="button button-small" href="${dmg}">Download</a>
+</div></nav>
+<div class="page">
+<main id="content">
+<section class="releases-hero">
+<h1>Release notes</h1>
+`;
+}
+
+/** The end of a releases page: the app's support address in the footer, as on the app's own page. */
 const FOOT = `</main>
 
 <footer class="site">
 <span>© 2026 Nidus Labs</span>
-<a href="mailto:hello@niduslabs.dev">hello@niduslabs.dev</a>
+<a href="mailto:support@niduslabs.dev">support@niduslabs.dev</a>
 </footer>
 </div>
 </body>
 </html>
 `;
-
-function heroStart(slug) {
-  return `<section class="releases-hero">
-<p class="crumb"><a href="/${slug}">${APPS[slug].name}</a></p>
-<h1>Release notes</h1>
-`;
-}
 
 /**
  * The full releases page for one app.

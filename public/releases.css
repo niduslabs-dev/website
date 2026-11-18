@@ -1,7 +1,7 @@
 /* The release notes pages, /drop/releases and /pane/releases, rendered by the
    Worker (src/releases.js). The hero's actions and button come from /product.css. */
 
-.releases-hero { padding: 56px 0 24px; }
+.releases-hero { padding: 40px 0 24px; }
 .releases-hero h1 {
   margin: 4px 0 0;
   font-size: clamp(34px, 7vw, 44px);
@@ -10,7 +10,6 @@
   letter-spacing: -0.03em;
 }
 .releases-hero .sub { margin: 12px 0 0; color: var(--muted); }
-.crumb { margin: 0; font-size: 14px; }
 
 .releases { padding: 8px 0 64px; display: flex; flex-direction: column; }
 .release { padding: 24px 0; border-top: 1px solid var(--rule); }

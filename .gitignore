@@ -4,6 +4,7 @@ node_modules/
 # Built from content/splito by scripts/build-legal.mjs.
 /public/splito/privacy/
 /public/splito/terms/
+/public/splito/delete-account/
 /public/splito/privacy.md
 /public/splito/terms.md
 

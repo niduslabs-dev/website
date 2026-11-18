@@ -96,6 +96,23 @@ describe("renderReleasesPage", () => {
     assert.ok(html.indexOf("v1-0-2") < html.indexOf("v1-0-1"));
   });
 
+  it("has the app bar with Release notes current, the skip link and its target", () => {
+    for (const page of [html, renderFallbackPage("pane")]) {
+      assert.ok(page.includes('<a class="skip" href="#content">Skip to content</a>'));
+      assert.ok(page.includes('<main id="content">'));
+      assert.ok(page.includes('<nav class="appbar" aria-label="Pane">'));
+      assert.ok(page.includes('<a href="/pane">Overview</a><a href="/pane/releases" aria-current="page">Release notes</a>'));
+      assert.ok(page.includes('popovertarget="app-pages"><span class="vh">Pane pages, </span>Release notes'));
+      assert.ok(page.includes('id="app-pages" popover>'));
+      assert.ok(!page.includes('class="crumb"'));
+      assert.equal((page.match(/<nav /g) ?? []).length, 2);
+    }
+  });
+
+  it("ends with the app's support address", () => {
+    assert.ok(html.includes('<a href="mailto:support@niduslabs.dev">support@niduslabs.dev</a>\n</footer>'));
+  });
+
   it("has no inline styles or scripts", () => {
     for (const page of [html, renderFallbackPage("drop")]) {
       assert.ok(!/<script|<style|\sstyle=/i.test(page));

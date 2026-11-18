@@ -9,6 +9,14 @@
   --ground: var(--paper);
   --link: #3b5e37;
   color-scheme: light dark;
+  /* Navigation sizes and timing (website navigation board, approved 2026-11-18). */
+  --hit: 44px;                              /* the minimum hit height for every link outside prose */
+  --nudge: -2px;                            /* how far the back link's chevron moves on hover */
+  --hover-ms: 120ms;                        /* motion.duration.hover */
+  --ease-out: cubic-bezier(0, 0, 0.58, 1);  /* motion.easing.easeOut */
+  --ring: 2px;                              /* border.focusRing */
+  --ring-gap: 2px;                          /* border.focusOffset */
+  --control-radius: 8px;                    /* radius.control */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -35,16 +43,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Links inside prose are underlined; navigation and actions never are (below). */
 a { color: var(--link); text-underline-offset: 3px; }
 a:hover { color: var(--text); }
 
+/* The keyboard focus ring on every page: moss, 2 px with a 2 px gap, only after keyboard use. */
+:focus-visible { outline: var(--ring) solid var(--moss); outline-offset: var(--ring-gap); border-radius: var(--control-radius); }
+
 .page { max-width: 760px; margin: 0 auto; padding: 0 20px; }
 
+/* The same header on every page: the brand (home), Apps and Contact. The links grow to the hit height and the
+   padding shrinks to match, so the header stays 86 px tall (21 + 44 + 21). */
 header.site {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 28px 0;
+  padding: 21px 0;
 }
 
 .brand {
@@ -56,6 +70,7 @@ header.site {
   font-weight: 800;
   font-size: 19px;
   letter-spacing: -0.02em;
+  min-height: var(--hit);
 }
 .brand span { font-weight: 500; color: var(--muted); }
 .brand img { width: 28px; height: 28px; }
@@ -65,8 +80,8 @@ header.site {
   .mark-dark { display: inline; }
 }
 
-nav.site { display: flex; gap: 20px; font-weight: 600; font-size: 15px; }
-nav.site a { color: var(--text); text-decoration: none; }
+nav.site { display: flex; gap: 4px; margin-right: -10px; font-weight: 600; font-size: 15px; }
+nav.site a { display: inline-flex; align-items: center; min-height: var(--hit); padding: 0 10px; border-radius: var(--control-radius); color: var(--text); text-decoration: none; }
 nav.site a:hover { color: var(--moss); }
 
 .hero { padding: 72px 0 56px; }
@@ -96,7 +111,8 @@ nav.site a:hover { color: var(--moss); }
 .app-name { color: var(--text); text-decoration: none; }
 .app-name:hover { color: var(--moss); }
 .app p { margin: 4px 0 10px; color: var(--muted); }
-.app .links { display: flex; flex-wrap: wrap; gap: 16px; font-size: 15px; font-weight: 600; }
+.app .links { display: flex; flex-wrap: wrap; gap: 0 6px; margin-left: -8px; font-size: 15px; font-weight: 600; }
+.app .links a { display: inline-flex; align-items: center; min-height: var(--hit); padding: 0 8px; text-decoration: none; }
 .badge {
   display: inline-block;
   font-size: 12px;
@@ -108,7 +124,8 @@ nav.site a:hover { color: var(--moss); }
   vertical-align: 2px;
 }
 
-.doc { padding: 40px 0 72px; }
+.doc { padding: 24px 0 72px; }
+.doc .back + h1 { margin-top: 8px; }
 .doc h1 { font-size: 40px; line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 8px; }
 .doc .updated { color: var(--muted); margin: 0 0 32px; font-size: 15px; }
 .doc h2 { font-size: 22px; letter-spacing: -0.01em; margin: 40px 0 8px; }
@@ -119,14 +136,74 @@ nav.site a:hover { color: var(--moss); }
 .doc th { font-weight: 700; }
 .table-scroll { overflow-x: auto; }
 
+/* The same footer on every page: muted, no underline, 44 px targets; Splito's sub-pages add their row. */
 footer.site {
   border-top: 1px solid var(--rule);
-  padding: 24px 0 40px;
+  padding: 14px 0 30px;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
   gap: 12px;
   font-size: 14px;
   color: var(--muted);
 }
-footer.site a { color: var(--muted); }
+footer.site a { display: inline-flex; align-items: center; min-height: var(--hit); padding: 0 8px; margin-right: -8px; color: var(--muted); text-decoration: none; }
+footer.site a:hover { color: var(--text); }
+.foot-group { flex-basis: 100%; display: flex; flex-wrap: wrap; gap: 0 4px; margin-left: -8px; }
+.foot-group a { margin-right: 0; }
+.foot-group a[aria-current="page"] { color: var(--text); }
+
+/* Actions: the moss button is the one primary action; the links beside it never underline. */
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 24px; }
+.actions a { white-space: nowrap; }
+.actions a:not(.button) { display: inline-flex; align-items: center; min-height: var(--hit); padding: 0 8px; text-decoration: none; }
+.actions a:not(.button):hover { color: var(--text); }
+.actions .button { margin-right: 8px; }
+/* Moss with the surface colour on it: white on #4f7a4a in light, #212027 on #8dbb82 in dark. */
+.button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 46px;
+  padding: 0 24px;
+  border-radius: 999px;
+  background: var(--moss);
+  color: var(--surface);
+  font-weight: 700;
+  text-decoration: none;
+}
+.button:hover { background: var(--link); color: var(--surface); }
+.button:focus-visible { border-radius: 999px; }
+
+/* The 404's way out, one step down from its line. */
+.hero .actions { margin-top: 28px; }
+
+/* Back link: Splito's sub-pages only, above the title (chevron, the app's small icon, its name). */
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;              /* space.xs */
+  min-height: var(--hit);
+  margin-left: -6px;     /* the chevron's ink lines up with the title */
+  padding: 0 10px 0 4px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--control-radius);
+}
+.back:hover { color: var(--text); }
+.back-chevron { flex-shrink: 0; transition: transform var(--hover-ms) var(--ease-out); }
+.back:hover .back-chevron { transform: translateX(var(--nudge)); }
+.back-icon { width: 20px; height: 20px; border-radius: 5px; }
+@media (prefers-reduced-motion: reduce) {
+  .back-chevron { transition: none; }
+  .back:hover .back-chevron { transform: none; }
+}
+
+/* Forced colours drop the moss fill and the colour that marks the current page, so a button keeps an edge and the
+   current page is underlined. */
+@media (forced-colors: active) {
+  .button { border: 1px solid ButtonText; }
+  :is(.app-links, .app-menu-panel, .foot-group) a[aria-current="page"] { text-decoration: underline; text-underline-offset: 3px; }
+}

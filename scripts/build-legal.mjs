@@ -1,13 +1,15 @@
-// Builds Splito's legal pages from their Markdown, the one place the wording
-// lives: each `content/splito/<page>.md` becomes `public/splito/<page>/index.html`
-// in the site's page shell, and is also published as `public/splito/<page>.md`
-// for the Splito app, which shows it natively. Both outputs are generated, so
-// they're gitignored; `pnpm dev` and `pnpm check` (and so CI's deploy) run this
-// first.
+// Builds Splito's sub-pages in one page shell (header, back link, footer), so
+// they can't drift. Privacy and terms come from Markdown, the one place their
+// wording lives: each `content/splito/<page>.md` becomes
+// `public/splito/<page>/index.html`, and is also published as
+// `public/splito/<page>.md` for the Splito app, which shows it natively. Delete
+// account keeps its wording as HTML (`content/splito/delete-account.html`).
+// Every output is generated, so it's gitignored; `pnpm dev` and `pnpm check`
+// (and so CI's deploy) run this first.
 import { copyFile, mkdir, readFile, writeFile } from "node:fs/promises";
 import { marked } from "marked";
 
-/** The pages, in the order the site's nav lists them. */
+/** The pages, in the order the footer's Splito row lists them. */
 const pages = [
   {
     slug: "privacy",
@@ -19,7 +21,16 @@ const pages = [
     nav: "Terms",
     description: "The terms for using Splito.",
   },
+  {
+    slug: "delete-account",
+    nav: "Delete account",
+    description: "How to delete your Splito account, and what's deleted.",
+    html: true,
+  },
 ];
+
+/** "‹ [Splito icon] Splito": the way up from a sub-page to /splito. */
+const BACK = `<a class="back" href="/splito" aria-label="Back to Splito"><svg class="back-chevron" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3.5 5.5 8l4.5 4.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><img class="back-icon" src="/splito/icon.png" width="20" height="20" alt="">Splito</a>`;
 
 const shell = ({ title, description, nav, body }) => `<!doctype html>
 <html lang="en">
@@ -40,13 +51,15 @@ const shell = ({ title, description, nav, body }) => `<!doctype html>
 <div class="page">
 <header class="site">
 <a class="brand" href="/"><img class="mark-light" src="/mark.svg" alt=""><img class="mark-dark" src="/mark-on-dark.svg" alt="">Nidus <span>Labs</span></a>
-<nav class="site" aria-label="Main">${nav}</nav>
+<nav class="site" aria-label="Main"><a href="/#apps">Apps</a><a href="mailto:hello@niduslabs.dev">Contact</a></nav>
 </header>
 
-<main class="doc">
+<main class="doc" id="content">
+${BACK}
 ${body}</main>
 
 <footer class="site">
+<nav class="foot-group" aria-label="Splito">${nav}</nav>
 <span>© 2026 Nidus Labs</span>
 <a href="mailto:support@niduslabs.dev">support@niduslabs.dev</a>
 </footer>
@@ -65,13 +78,12 @@ const navFor = (current) =>
     .join("");
 
 for (const page of pages) {
-  const source = new URL(`../content/splito/${page.slug}.md`, import.meta.url);
-  const markdown = await readFile(source, "utf8");
-  const title = /^# (.+)$/m.exec(markdown)?.[1];
-  if (!title) throw new Error(`content/splito/${page.slug}.md needs a "# " title`);
+  const source = new URL(`../content/splito/${page.slug}.${page.html ? "html" : "md"}`, import.meta.url);
+  const text = await readFile(source, "utf8");
+  const title = (page.html ? /<h1>(.+?)<\/h1>/ : /^# (.+)$/m).exec(text)?.[1];
+  if (!title) throw new Error(`content/splito/${page.slug} needs a title (# in Markdown, <h1> in HTML)`);
 
-  const body = marked
-    .parse(markdown)
+  const body = (page.html ? text : marked.parse(text))
     // The site's styles: the date under the title, and a table that scrolls
     // on its own on a narrow screen.
     .replace(/<p>(Last updated [^<]+)<\/p>/, '<p class="updated">$1</p>')
@@ -82,7 +94,7 @@ for (const page of pages) {
   const directory = new URL(`../public/splito/${page.slug}/`, import.meta.url);
   await mkdir(directory, { recursive: true });
   await writeFile(new URL("index.html", directory), html);
-  await copyFile(source, new URL(`../public/splito/${page.slug}.md`, import.meta.url));
+  if (!page.html) await copyFile(source, new URL(`../public/splito/${page.slug}.md`, import.meta.url));
 }
 
 console.log(`Built ${pages.map(({ slug }) => `/splito/${slug}`).join(", ")} from content/splito.`);
