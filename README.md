@@ -11,6 +11,7 @@ pnpm install
 pnpm build    # the Splito legal pages and their Markdown, from content/splito
 pnpm dev      # build, then http://localhost:8787
 pnpm check    # build, then wrangler's dry-run deploy: reads the config and public/, uploads nothing
+pnpm test     # the release-notes Worker's tests (node --test)
 ```
 
 ## Deploying
